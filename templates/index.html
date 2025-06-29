@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOUR HAPPY BOT🤖</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Floating Animation Elements -->
+  <div class="floating-sparkles"></div>
+  <div class="floating-clouds"></div>
+  
+  <div class="chat-container">
+    <header class="chat-header">
+      <div class="logo">
+        <div class="logo-icon">✨</div>
+        <h1>HAPPY BOT🤖</h1>
+      </div>
+      <div class="status">
+        <span class="status-indicator"></span>
+        <span>Online</span>
+      </div>
+    </header>
+
+    <div id="chat-box" class="chat-box">
+      <div class="welcome-message">
+        <div class="bot-avatar">G</div>
+        <div class="message-content">
+          <p>Hello! I'm HAPPY AI. How can I assist you today?</p>
+          <div class="typing-animation">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form id="chat-form" class="chat-form">
+      <div class="input-container">
+        <input type="text" id="user-input" placeholder="Ask me anything..." autocomplete="off" />
+        <button type="submit" class="send-button">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("user-input");
+    const chatBox = document.getElementById("chat-box");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+
+      // Add user message
+      addMessage(message, 'user');
+      input.value = "";
+      
+      // Show typing indicator
+      const typingIndicator = addTypingIndicator();
+      
+      try {
+        const response = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+        const reply = data.response;
+
+        // Remove typing indicator and add response
+        typingIndicator.remove();
+        addMessage(reply, 'bot');
+      } catch (error) {
+        addMessage("Error: Failed to get response. Please try again.", 'error');
+      }
+    });
+
+    function addMessage(content, type) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+      
+      if (type === 'bot') {
+        messageDiv.innerHTML = `
+          <div class="bot-avatar">G</div>
+          <div class="message-content">
+            <p>${content}</p>
+          </div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="message-content">
+            <p>${content}</p>
+          </div>
+        `;
+      }
+      
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'message bot typing';
+      typingDiv.innerHTML = `
+        <div class="bot-avatar">G</div>
+        <div class="message-content">
+          <div class="typing-animation">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      `;
+      
+      chatBox.appendChild(typingDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return typingDiv;
+    }
+  </script>
+</body>
+</html>
