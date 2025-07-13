@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuration
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AIzaSyBmHpu1I6Xv-FCBn0-e4eovJ93wAmV7i4c')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 genai.configure(api_key=GEMINI_API_KEY)
 
 # Improved model configuration
