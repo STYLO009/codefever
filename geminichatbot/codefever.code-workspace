@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "codefever",
+			"path": ".."
+		},
+		{
+			"name": "geminichatbot",
+			"path": "../../../../../geminichatbot"
+		}
+	],
+	"settings": {}
+}
